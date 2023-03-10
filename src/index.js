@@ -67,9 +67,14 @@ window.Livewire.directive('sortable-group', (el, directive, component) => {
             pull: true,
             put: true,
         },
-        onSort: () => {
-            let modified = el.item.getAttribute('wire:sortable-group.item');
+        onSort: (event) => {
+            let modified = event.item.getAttribute('wire:sortable-group.item');
             let masterEl = el.closest('[wire\\:sortable-group]');
+
+            // Avoid firing the event twice.
+            if (event.target !== event.from) {
+                return;
+            }
 
             let groups = Array.from(masterEl.querySelectorAll('[wire\\:sortable-group\\.item-group]')).map((el, index) => {
                 return {
